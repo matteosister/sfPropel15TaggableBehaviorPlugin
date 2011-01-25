@@ -1,0 +1,7 @@
+## File YAML
+## written by Matteo
+## m.giachino@vivacom.com
+
+tag_hub_autocompleter_ajax:
+  url: /tag_hub/autocompleterajax
+  param: { module: sfTagHub, action: autocompleterAjax }
