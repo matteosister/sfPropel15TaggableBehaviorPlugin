@@ -10,8 +10,8 @@ class BasesfTagHubActions extends sfActions
 {
     public function executeAutocompleterAjax(sfWebRequest $request)
     {
-        $q = $request->getParameter('q');
-        $limit = $request->getParameter('limit');
+        $q = $request->getParameter('term');
+        $limit = $request->getParameter('limit', 20);
 
         $tags = SfTagQuery::create()
             ->filterByName('%'.$q . '%', ModelCriteria::LIKE)
@@ -21,7 +21,10 @@ class BasesfTagHubActions extends sfActions
         $arrTags = array();
         foreach ($tags as $tag)
         {
-            $arrTags[$tag->getId()] = (string) $tag->getName();
+            $thisTag['id'] = $tag->getId();
+            $thisTag['label'] = $tag->getName();
+            $thisTag['value'] = $tag->getName();
+            $arrTags[] = $thisTag;
         }
 
         return $this->renderText(json_encode($arrTags));

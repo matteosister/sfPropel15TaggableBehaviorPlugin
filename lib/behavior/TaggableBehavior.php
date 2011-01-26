@@ -33,6 +33,7 @@ public function addTags(\$tags) {
 
     foreach (\$arrTags as \$tag) {
         \$tag = trim(\$tag);
+        if (\$tag == \"\") return;
         \$theTag = SfTagQuery::create()->filterByName(\$tag)->findOne();
 
         // if the tag do not already exists

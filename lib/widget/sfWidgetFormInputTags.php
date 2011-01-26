@@ -4,7 +4,7 @@
  *  Just for fun...
  */
 
-class sfWidgetFormInputTags extends sfWidgetFormJQueryAutocompleter
+class sfWidgetFormInputTags extends sfWidgetFormInput
 {
     protected function configure($options = array(), $attributes = array())
     {
@@ -31,16 +31,73 @@ class sfWidgetFormInputTags extends sfWidgetFormJQueryAutocompleter
             $html .= '</li>';
         }
         $html .= "</ul>";
+
         //return $html . $this->renderTag('input', array_merge(array('type' => $this->getOption('type'), 'name' => $name, 'value' => $value), $attributes));
-        $autocompleterInput = parent::render($name, $value, $attributes, $errors);
-        return $html.$autocompleterInput;
+        $inputField = parent::render($name, $value, $attributes, $errors);
+
+        $routing = sfContext::getInstance()->getRouting();
+
+        $js = sprintf("
+        <script type=\"text/javascript\">
+        function split( val ) {
+			return val.split( /,\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+        jQuery('#%s').autocomplete({
+            source: function( request, response ) {
+                $.getJSON( \"%s\", {
+                    term: extractLast( request.term )
+                }, response );
+            },
+            search: function() {
+                // custom minLength
+                var term = extractLast( this.value );
+                if ( term.length < 2 ) {
+                    return false;
+                }
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( \"\" );
+                this.value = terms.join( \", \" );
+                return false;
+            }
+        });
+        </script>
+        ",
+            $this->generateId($name),
+            $routing->generate('tag_hub_autocompleter_ajax')
+        );
+
+        return $html.$inputField.$js;
     }
 
     public function getJavaScripts()
     {
-        return array_merge(parent::getJavascripts(), array(
-            '/sfPropel15TaggableBehaviorPlugin/js/sfPropel15TaggableBehaviorPlugin'
-        ));
+        return array(
+            '/sfPropel15TaggableBehaviorPlugin/js/sfPropel15TaggableBehaviorPlugin',
+            '/sfPropel15TaggableBehaviorPlugin/js/jquery-1.4.4.min.js',
+            '/sfPropel15TaggableBehaviorPlugin/js/jquery-ui-1.8.9.custom.min.js'
+        );
+    }
+
+    public function  getStylesheets()
+    {
+        return array(
+            '/sfPropel15TaggableBehaviorPlugin/css/smoothness/jquery-ui-1.8.9.custom.css' => 'screen',
+            '/sfPropel15TaggableBehaviorPlugin/css/sfPropel15TaggableBehaviorPlugin.css' => 'screen'
+        );
     }
 }
 

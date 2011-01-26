@@ -1,0 +1,14 @@
+/*
+ *  Matteo Giachino <m.giachino@vivacom.com>
+ *  Just for fun...
+ */
+
+
+
+ul.ui-autocomplete li {
+    list-style-type: none;
+}
+
+.ui-autocomplete-loading { 
+    background: white url('/sfPropel15TaggableBehaviorPlugin/images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
