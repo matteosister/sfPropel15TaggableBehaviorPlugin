@@ -24,10 +24,10 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
         $inputId = $this->generateId($name);
 
         $html = '<ul class="checkbox_list" id="sfPropel15TaggablePlugin">';
-        foreach ($tags as $tag) {
+        foreach ($tags as $i => $tag) {
             $tag = trim($tag);
             $html .= '<li>';
-            $html .= '<input type="checkbox" id="'.$inputId.'_delete" name="'.str_replace("]", "_delete][]",$name).'" value="'.$tag.'" /> <label for="'.$inputId.'_delete">'.$tag.'</label>';
+            $html .= '<input type="checkbox" id="'.$inputId.'_'.$i.'_delete" name="'.str_replace("]", "_delete][]",$name).'" value="'.$tag.'" /> <label for="'.$inputId.'_'.$i.'_delete">'.$tag.'</label>';
             $html .= '</li>';
         }
         $html .= "</ul>";

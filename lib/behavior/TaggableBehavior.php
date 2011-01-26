@@ -28,7 +28,7 @@ class TaggableBehavior extends Behavior {
  * Tag a propel object with taggable behavior
  * @tag array or string
  */
-public function addTags(\$tags) {
+public function addTag(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
 
     foreach (\$arrTags as \$tag) {
@@ -95,17 +95,20 @@ public function getTags() {
 /**
  * Remove a tag
  */
-public function removeTag(\$tag) {
-    \$tag = trim(\$tag);
-    \$taggings = SfTaggingQuery::create()
-        ->filterByTaggableModel('{$table->getPhpName()}')
-        ->filterByTaggableId(\$this->getId())
-        ->useSfTagQuery()
-            ->filterByName(\$tag)
-        ->endUse()
-        ->find();
-    foreach (\$taggings as \$tagging) {
-        \$tagging->delete();
+public function removeTag(\$tags) {
+    \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
+    foreach (\$arrTags as \$tag) {
+        \$tag = trim(\$tag);
+        \$taggings = SfTaggingQuery::create()
+            ->filterByTaggableModel('{$table->getPhpName()}')
+            ->filterByTaggableId(\$this->getId())
+            ->useSfTagQuery()
+                ->filterByName(\$tag)
+            ->endUse()
+            ->find();
+        foreach (\$taggings as \$tagging) {
+            \$tagging->delete();
+        }
     }
 }
 
