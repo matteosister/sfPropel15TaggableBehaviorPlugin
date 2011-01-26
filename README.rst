@@ -75,5 +75,10 @@ Some examples:
     $article->getTags() // array of tags
 
 
+Credits to Xavier Lacot
+-----------------------
 
+This plugin is heavily inspired to sfPropelActAsTaggablePlugin that hasn't been updated for
+symfony 1.3/1.4. So this is just a new version of that plugin that also support the new
+propel behavior system.
 
