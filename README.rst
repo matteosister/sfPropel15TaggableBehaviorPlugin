@@ -61,10 +61,10 @@ Some examples:
     $article = new Article();
 
     // add tags
-    $article->addTags('symfony'); // a string with no comma is a single tag
-    $article->addTags('linux, ubuntu'); // a string with comma is multiple tag
-    $article->addTags('symfony'); // if the object is already tagged nothing happens
-    $article->addTags(array('linus', 'torvalds')); // list of tags as an array
+    $article->addTag('symfony'); // a string with no comma is a single tag
+    $article->addTag('linux, ubuntu'); // a string with comma is multiple tag
+    $article->addTag('symfony'); // if the object is already tagged nothing happens
+    $article->addTag(array('linus', 'torvalds')); // list of tags as an array
 
     // remove tags
     $article->removeTag('symfony');
