@@ -2,7 +2,8 @@
 sfPropel15TaggableBehaviorPlugin
 --------------------------------
 
-A plugin for symfony 1.x with a propel 1.5.x behavior and some other stuff...
+A behavior and a widget(work in progress) for symfony 1.x and propel 1.5/1.6
+
 
 
 How to install
@@ -52,7 +53,6 @@ How to install
 How to use
 ----------
 
-This plugin is really easy to use.
 Some examples:
 
 ::
@@ -81,4 +81,3 @@ Credits to Xavier Lacot
 This plugin is heavily inspired to sfPropelActAsTaggablePlugin that hasn't been updated for
 symfony 1.3/1.4. So this is just a new version of that plugin that also support the new
 propel behavior system.
-

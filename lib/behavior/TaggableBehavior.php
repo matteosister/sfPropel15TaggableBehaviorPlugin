@@ -6,27 +6,27 @@
  */
 
 class TaggableBehavior extends Behavior {
-    protected $parameters = array();
-
-    public function objectMethods()
+    public function objectMethods($builder)
     {
+        $this->builder = $builder;
+        
         $script = '';
-        $script .= $this->generateAddTagMethod();
-        $script .= $this->generateGetTagsMethod();
-        $script .= $this->generateRemoveTagMethod();
+
+        $this->addAddTagMethod($script);
+        $this->addGetTagsMethod($script);
+        $this->addRemoveTagMethod($script);
+
         return $script;
     }
 
-    private function generateAddTagMethod()
+    private function addAddTagMethod(&$script)
     {
-        $table = new Table();
         $table = $this->getTable();
-
-        return "
+        $script .= "
         
 /**
- * Tag a propel object with taggable behavior
- * @tag array or string
+ * Add tags
+ * @param	array/string \$tags A string for a single tag or an array of strings for multiple tags
  */
 public function addTag(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
@@ -59,15 +59,16 @@ public function addTag(\$tags) {
 ";
     }
 
-    private function generateGetTagsMethod()
+    private function addGetTagsMethod(&$script)
     {
         $table = new Table();
         $table = $this->getTable();
 
-        return "
+        $script .= "
 
 /**
- * Retrieve Tags for Object
+ * Retrieve Tags
+ * @return array An array of tags
  */
 public function getTags() {
     \$taggings = SfTaggingQuery::create()
@@ -86,14 +87,15 @@ public function getTags() {
 ";
     }
 
-    private function generateRemoveTagMethod()
+    private function addRemoveTagMethod(&$script)
     {
         $table = new Table();
         $table = $this->getTable();
 
-        return "
+        $script .= "
 /**
  * Remove a tag
+ * @param	array/string \$tags A string for a single tag or an array of strings for multiple tags
  */
 public function removeTag(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
