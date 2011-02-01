@@ -6,6 +6,39 @@
  */
 
 class TaggableBehavior extends Behavior {
+    
+    protected $parameters = array(
+        'tags_table'    => 'taggable_tags',
+        'tagging_table' => '%s_taggings',
+    );
+
+
+    public function modifyTable()
+    {
+        $db = new Database();
+        $db = $this->getTable()->getDatabase();
+        if (!$db->hasTable('taggable_tags')) {
+            $colId = new Column('id');
+            $colId->setType(PropelTypes::INTEGER);
+            $colId->setPrimaryKey(true);
+            $colId->setAutoIncrement(true);
+
+            $colName = new Column('name');
+            $colName->setType(PropelTypes::VARCHAR);
+            $colName->setSize('50');
+            $colName->setUnique(true);
+
+            $table = new Table($this->parameters['tags_table']);
+            $table->addColumn($colId);
+            $table->addColumn($colName);
+            $table->setPackage('');
+            $table->setIdMethod('native');
+
+            $db->addTable($table);
+        }
+    }
+
+
     public function objectMethods($builder)
     {
         $this->builder = $builder;
