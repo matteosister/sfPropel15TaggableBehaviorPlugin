@@ -8,36 +8,60 @@
 class TaggableBehavior extends Behavior {
     
     protected $parameters = array(
-        'tags_table'    => 'taggable_tags',
-        'tagging_table' => '%s_taggings',
+        'tagging_table' => '%TABLE%_tagging',
+        'tagging_table_phpname' => '%PHPNAME%Tagging',
+        'tag_table' => 'taggable_tag',
+        'tag_table_phpname' => 'TaggableTag',
     );
 
+    protected $taggingTable;
+
+    public function modifyDatabase()
+    {
+        parent::modifyDatabase();
+        die('si');
+        $this->createTagTable();
+    }
 
     public function modifyTable()
     {
-        $db = new Database();
-        $db = $this->getTable()->getDatabase();
-        if (!$db->hasTable('taggable_tags')) {
-            $colId = new Column('id');
-            $colId->setType(PropelTypes::INTEGER);
-            $colId->setPrimaryKey(true);
-            $colId->setAutoIncrement(true);
-
-            $colName = new Column('name');
-            $colName->setType(PropelTypes::VARCHAR);
-            $colName->setSize('50');
-            $colName->setUnique(true);
-
-            $table = new Table($this->parameters['tags_table']);
-            $table->addColumn($colId);
-            $table->addColumn($colName);
-            $table->setPackage('');
-            $table->setIdMethod('native');
-
-            $db->addTable($table);
-        }
+        
     }
 
+    protected  function createTagTable()
+    {
+        $table = $this->getTable();
+		$database = $table->getDatabase();
+		$taggingTableName = $this->parameters['tag_table'];
+		if($database->hasTable($taggingTableName)) {
+			$this->taggingTable = $database->getTable($taggingTableName);
+		} else {
+			$this->taggingTable = $database->addTable(array(
+				'name'      => $taggingTableName,
+				'phpName'   => $this->parameters['tag_table_phpname'],
+				'package'   => $table->getPackage(),
+				'schema'    => $table->getSchema(),
+				'namespace' => $table->getNamespace(),
+			));
+		}
+
+        if (!$this->taggingTable->hasColumn('id')) {
+            $this->taggingTable->addColumn(array(
+                'name'          => 'id',
+                'type'          => PropelTypes::INTEGER,
+                'primaryKey'    => 'true',
+                'autoIncrement' => 'true',
+            ));
+        }
+        
+        if (!$this->taggingTable->hasColumn('name')) {
+            $this->taggingTable->addColumn(array(
+                'name'          => 'name',
+                'type'          => PropelTypes::VARCHAR,
+                'size'          => '60'
+            ));
+        }
+    }
 
     public function objectMethods($builder)
     {
@@ -49,7 +73,7 @@ class TaggableBehavior extends Behavior {
         $this->addGetTagsMethod($script);
         $this->addRemoveTagMethod($script);
 
-        return $script;
+        //return $script;
     }
 
     private function addAddTagMethod(&$script)
