@@ -3,13 +3,12 @@
  *  Just for fun...
  */
 
+
 jQuery(document).ready( function() {
 
     jQuery('ul#sfPropel15TaggablePlugin li input').each( function() {
         jQuery(this).change(reloadTagsLayout);
     });
-
-    
 });
 
 function reloadTagsLayout()

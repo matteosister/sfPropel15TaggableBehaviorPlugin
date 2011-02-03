@@ -29,7 +29,7 @@ class TaggableBehavior extends Behavior {
 
         $script = '';
 
-        $this->addAddTagMethod($script);
+        $this->addAddTagsMethod($script);
         $this->addRemoveTagMethod($script);
 
         return $script;
@@ -147,7 +147,7 @@ class TaggableBehavior extends Behavior {
         $this->taggingTable->addForeignKey($fkObj);
     }
 
-    private function addAddTagMethod(&$script)
+    private function addAddTagsMethod(&$script)
     {
         $table = $this->getTable();
         $script .= "
@@ -172,7 +172,8 @@ public function addTags(\$tags) {
             \$theTag->save();
         }
 
-        \$this->addTag(\$theTag);
+        if (!\$this->getTags()->contains(\$theTag))
+            \$this->addTag(\$theTag);
     }
 }
         
