@@ -30,7 +30,6 @@ class TaggableBehavior extends Behavior {
         $script = '';
 
         $this->addAddTagMethod($script);
-        //$this->addGetTagsMethod($script);
         $this->addRemoveTagMethod($script);
 
         return $script;
@@ -180,33 +179,6 @@ public function addTags(\$tags) {
 ";
     }
 
-    private function addGetTagsMethod(&$script)
-    {
-        $table = new Table();
-        $table = $this->getTable();
-
-        $script .= "
-
-/**
- * Retrieve Tags
- * @return array An array of tags
- */
-public function getTags() {
-    \$taggings = SfTaggingQuery::create()
-        ->filterByTaggableModel('{$table->getPhpName()}')
-        ->filterByTaggableId(\$this->getId())
-        ->joinWith('SfTagging.SfTag')
-        ->find();
-
-    \$arrTags = array();
-    foreach (\$taggings as \$tagging) {
-        \$arrTags[]  = \$tagging->getSfTag()->getName();
-    }
-    return \$arrTags;
-}
-
-";
-    }
 
     private function addRemoveTagMethod(&$script)
     {
