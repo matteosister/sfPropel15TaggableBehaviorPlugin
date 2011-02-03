@@ -16,22 +16,17 @@ class TaggableBehavior extends Behavior {
 
     protected $taggingTable;
 
-    public function modifyDatabase()
-    {
-        parent::modifyDatabase();
-        die('si');
-        $this->createTagTable();
-    }
 
     public function modifyTable()
     {
-        
+        $this->createTagTable();
     }
 
     protected  function createTagTable()
     {
         $table = $this->getTable();
 		$database = $table->getDatabase();
+
 		$taggingTableName = $this->parameters['tag_table'];
 		if($database->hasTable($taggingTableName)) {
 			$this->taggingTable = $database->getTable($taggingTableName);
@@ -40,7 +35,7 @@ class TaggableBehavior extends Behavior {
 				'name'      => $taggingTableName,
 				'phpName'   => $this->parameters['tag_table_phpname'],
 				'package'   => $table->getPackage(),
-				'schema'    => $table->getSchema(),
+				//'schema'    => $table->getSchema(),
 				'namespace' => $table->getNamespace(),
 			));
 		}
@@ -61,6 +56,8 @@ class TaggableBehavior extends Behavior {
                 'size'          => '60'
             ));
         }
+
+        $this->taggingTable->addBehavior('symfony');
     }
 
     public function objectMethods($builder)
