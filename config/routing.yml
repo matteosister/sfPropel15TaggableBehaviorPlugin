@@ -3,5 +3,10 @@
 ## m.giachino@vivacom.com
 
 tag_hub_autocompleter_ajax:
-  url: /tag_hub/autocompleterajax
-  param: { module: sfTagHub, action: autocompleterAjax }
+  url: /tag_hub/autocompleterajax.json
+  param: { module: sfTagHub, action: autocompleterAjax, format: json }
+
+
+tag_hub_delete_tag:
+  url: /tag_hub/delete/:obj_id/:taggable_phpname
+  param: { module: sfTagHub, action: deleteTag }

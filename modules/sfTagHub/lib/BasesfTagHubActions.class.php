@@ -29,4 +29,16 @@ class BasesfTagHubActions extends sfActions
 
         return $this->renderText(json_encode($arrTags));
     }
+
+    public function executeDeleteTag(sfWebRequest $request)
+    {
+        $this->forward404Unless($request->hasParameter('tag_id'));
+        $taggableName = $request->getParameter('taggable_phpname');
+        $taggableQueryName = $taggableName.'Query';
+        $queryObj = $taggableQueryName::create();
+        $obj = $queryObj->findOneById($request->getParameter('obj_id'));
+        $tag = TagQuery::create()->findOneById($request->getParameter('tag_id'));
+        $obj->removeTags($tag->getName());
+        return sfView::NONE;
+    }
 }

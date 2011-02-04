@@ -17,7 +17,9 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
 
     public function render($name, $value = null, $attributes = array(), $errors = array())
     {
+
         $taggable = $this->getOption('taggable');
+        $taggableName = $taggable->getPeer()->getTableMap()->getClassname();
         $inputId = $this->generateId($name);
         $html = '';
 
@@ -25,9 +27,8 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
             $tags = $taggable->getTags();
             $html .= '<ul class="checkbox_list" id="sfPropel15TaggablePlugin">';
             foreach ($tags as $i => $tag) {
-                $tag = trim($tag);
                 $html .= '<li>';
-                $html .= '<input type="checkbox" id="'.$inputId.'_'.$i.'_delete" name="'.str_replace("]", "_delete][]",$name).'" value="'.$tag.'" /> <label for="'.$inputId.'_'.$i.'_delete">'.$tag.'</label>';
+                $html .= '<a href="javascript:void(0)" class="tag-delete" id="'.$tag->getId().'">'.$tag.'</a>';
                 $html .= '</li>';
             }
             $html .= "</ul>";
@@ -38,15 +39,24 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
         $inputField = parent::render($name, $value, $attributes, $errors);
 
         $routing = sfContext::getInstance()->getRouting();
+        //$routing->generate('tag_hub_delete_tag', array('id' => $taggable->getId(), 'tag_id' => ))
 
         $js = sprintf("
         <script type=\"text/javascript\">
-        function split( val ) {
-			return val.split( /,\s*/ );
-		}
-		function extractLast( term ) {
-			return split( term ).pop();
-		}
+
+        jQuery('ul.checkbox_list li a.tag-delete').each( function() {
+            jQuery(this).click( function() {
+                $.ajax({
+                  url: '".$routing->generate('tag_hub_delete_tag', array('obj_id' => $taggable->getId(), 'taggable_phpname' => $taggableName))."?tag_id=' + jQuery(this).attr('id'),
+                  context: jQuery(this),
+                  success: function(){
+                    jQuery(this).fadeOut('fast');
+                  }
+                });
+            });
+        });
+        
+        // autocompleter stuff
         jQuery('#%s').autocomplete({
             source: function( request, response ) {
                 $.getJSON( \"%s\", {
@@ -76,6 +86,16 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
                 return false;
             }
         });
+
+        // split a csv string
+        function split( val ) {
+			return val.split( /,\s*/ );
+		}
+
+        // last term after comma
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
         </script>
         ",
             $this->generateId($name),
@@ -88,7 +108,7 @@ class sfWidgetFormInputTags extends sfWidgetFormInput
     public function getJavaScripts()
     {
         return array(
-            '/sfPropel15TaggableBehaviorPlugin/js/jquery-1.4.4.min.js',
+            '/sfPropel15TaggableBehaviorPlugin/js/jquery-1.5.min.js',
             '/sfPropel15TaggableBehaviorPlugin/js/jquery-ui-1.8.9.custom.min.js',
             '/sfPropel15TaggableBehaviorPlugin/js/sfPropel15TaggableBehaviorPlugin'
         );

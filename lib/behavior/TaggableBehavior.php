@@ -199,7 +199,7 @@ public function removeTags(\$tags) {
         if (null === \$tagObj) {
             return;
         }
-        \$taggings = \$this->get{$this->taggingTable->getPhpName()}();
+        \$taggings = \$this->get{$this->taggingTable->getPhpName()}s();
         foreach (\$taggings as \$tagging) {
             if (\$tagging->get{$this->tagTable->getPhpName()}Id() == \$tagObj->getId()) {
                 \$tagging->delete();
