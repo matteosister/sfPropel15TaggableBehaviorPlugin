@@ -81,12 +81,12 @@ Some examples:
     $article->addTag($tag);
     $article->save();
     
-
-    // or the more elegant propel way (propel addTag method)
+    // or the addTags method, that directly accept strings, array or csv
     $article->addTags('symfony'); // a string with no comma is a single tag
     $article->addTags('linux, ubuntu'); // a string with comma is multiple tag
     $article->addTags('symfony'); // if the object is already tagged nothing happens
     $article->addTags(array('linus', 'torvalds')); // list of tags as an array
+
 
     // remove tags
     $article->removeTags('symfony');
