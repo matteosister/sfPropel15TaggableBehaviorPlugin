@@ -16,7 +16,7 @@ class sfValidatorTags extends sfValidatorBase
     protected function doClean($value)
     {
         $clean = (string) $value;
-
+        
         $taggable = $this->getOption('taggable');
         $taggable->addTags($clean);
 

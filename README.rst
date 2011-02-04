@@ -96,9 +96,11 @@ Some examples:
 Tag widget!
 -----------
 
-This plugin has also a nice jquery 1.5 powered widget for your forms
+This plugin creates a tagging table with crossref attribute, that has one fk on the object table and one on the tag table.
+When this "many-to-many" relations occur, Propel admin generator comes out of the box with a nice multiple select to tag your objects.
+But if you want something more interactive there is a nice jquery powered widget.
 
-- Enable the sfTagHub module in your settings.yml file:
+- Enable the sfTagHub module in your settings.yml file (for jquery requests):
 
 *app/backend/config/settings.yml*
 
@@ -120,6 +122,8 @@ both of them accept the taggable object as a parameter
     {
       public function configure()
       {
+          // this is mandatory. Or the default multiple select widget will override the tags widget
+          unset($this['article_tagging_list']); // change "article" with your propel table name.
           // ....
           $this->setWidget('tags', new sfWidgetFormInputTags(array('taggable' => $this->getObject())));
           $this->setValidator('tags', new sfValidatorTags(array('taggable' => $this->getObject())));
@@ -133,5 +137,11 @@ both of them accept the taggable object as a parameter
     php symfony cc
 
 Now your form has a widget with jquery autocomplete that read from the tag table. And a list of tags associated with a delete button and a nice fadeout effect.
-The tags are saved server side (when you hit "save" on your form), your comma separated string is parsed,
+The tags are saved server side (when you hit "save" on your form). The tag deletion are made via ajax and the sfTagHub module. No "save" needed.
+
+TODO
+----
+
+- check compatibility with propel 1.5.x, I'm testing this on propel 1.6.0 and symfony 1.4.8.
+- check the autogeneration of removeXXX() by propel in many-to-many relations
 
