@@ -74,15 +74,19 @@ Some examples:
     <?php
     $article = new Article();
 
-    // there are two ways to add tags. The easy way (addTags method):
+
+    // there are two ways to add tags. The propel way:
+    $tag = new Tag();
+    $tag->setName('propel');
+    $article->addTag($tag);
+    $article->save();
+    
+
+    // or the more elegant propel way (propel addTag method)
     $article->addTags('symfony'); // a string with no comma is a single tag
     $article->addTags('linux, ubuntu'); // a string with comma is multiple tag
     $article->addTags('symfony'); // if the object is already tagged nothing happens
     $article->addTags(array('linus', 'torvalds')); // list of tags as an array
-
-    // or the more elegant propel way (propel addTag method)
-    $tag = new Tag('symfony');
-    $article->addTag($tag);
 
     // remove tags
     $article->removeTags('symfony');
