@@ -91,3 +91,47 @@ Some examples:
 
     // retrieve tags
     $article->getTags() // PropelCollection of Tag object
+
+
+Tag widget!
+-----------
+
+This plugin has also a nice jquery 1.5 powered widget for your forms
+
+- Enable the sfTagHub module in your settings.yml file:
+
+*app/backend/config/settings.yml*
+
+::
+
+    all:
+      .settings:
+      # ...
+      enabled_modules:        [..., sfTagHub]
+
+
+
+- Create a tag field with **sfWidgetFormInputTags** widget in your form class, and don't forget the validator
+both of them accept the taggable object as a parameter
+
+::
+
+    class ArticleForm extends BaseArticleForm
+    {
+      public function configure()
+      {
+          // ....
+          $this->setWidget('tags', new sfWidgetFormInputTags(array('taggable' => $this->getObject())));
+          $this->setValidator('tags', new sfValidatorTags(array('taggable' => $this->getObject())));
+      }
+    }
+
+- clear your cache
+
+::
+
+    php symfony cc
+
+Now your form has a widget with jquery autocomplete that read from the tag table. And a list of tags associated with a delete button and a nice fadeout effect.
+The tags are saved server side (when you hit "save" on your form), your comma separated string is parsed,
+
