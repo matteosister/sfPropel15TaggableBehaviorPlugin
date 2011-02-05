@@ -13,7 +13,9 @@ How to install
 
     git submodule add git://github.com/matteosister/sfPropel15TaggableBehaviorPlugin.git plugins/sfPropel15TaggableBehaviorPlugin
 
-- enable the plugin in your **ProjectConfiguration** class (config/ProjectConfiguration.class.php)
+- enable the plugin in your **ProjectConfiguration** class
+
+*config/ProjectConfiguration.class.php*
 
 ::
 
@@ -33,6 +35,8 @@ How to install
     }
 
 - add the **taggable** behavior to a class in your schema file
+
+*config/schema.xml*
 
 ::
 
@@ -119,6 +123,8 @@ But if you want something more interactive there is a nice jquery powered widget
 
 - Create a tag field with **sfWidgetFormInputTags** widget in your form class, and don't forget the validator
 both of them accept the taggable object as a parameter
+
+*lib/form/ArticleForm.class.php*
 
 ::
 
