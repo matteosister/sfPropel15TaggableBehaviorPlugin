@@ -14,8 +14,17 @@ class TaggableBehavior extends Behavior {
         'tag_table_phpname' => 'Tag',
     );
 
-    protected $taggingTable, $tagTable;
+    protected $taggingTable, 
+        $tagTable,
+        $objectBuilderModifier,
+		$queryBuilderModifier,
+		$peerBuilderModifier;
 
+
+    public function modifyDatabase()
+    {
+        die('mod db');
+    }
 
     public function modifyTable()
     {
@@ -52,6 +61,11 @@ class TaggableBehavior extends Behavior {
 				'schema'    => $table->getSchema(),
 				'namespace' => $table->getNamespace(),
 			));
+            // every behavior adding a table should re-execute database behaviors
+            // see bug 2188 http://www.propelorm.org/changeset/2188
+            foreach ($database->getBehaviors() as $behavior) {
+                    $behavior->modifyDatabase();
+            }
 		}
 
         if (!$this->tagTable->hasColumn('id')) {
@@ -71,9 +85,6 @@ class TaggableBehavior extends Behavior {
                 'primaryString' => 'true'
             ));
         }
-        
-        $symfonyBehavior = new SfPropelBehaviorSymfony();
-        $this->tagTable->addBehavior($symfonyBehavior);
     }
 
     protected function createTaggingTable()
@@ -96,10 +107,12 @@ class TaggableBehavior extends Behavior {
 				'schema'    => $table->getSchema(),
 				'namespace' => $table->getNamespace(),
 			));
+            // every behavior adding a table should re-execute database behaviors
+            // see bug 2188 http://www.propelorm.org/changeset/2188
+            foreach ($database->getBehaviors() as $behavior) {
+                    $behavior->modifyDatabase();
+            }
 		}
-
-        $symfonyBehavior = new SfPropelBehaviorSymfony();
-        $this->taggingTable->addBehavior($symfonyBehavior);
 
         $objFkColumn;
         if ($this->taggingTable->hasColumn($table->getName().'_id')) {
@@ -229,5 +242,29 @@ public function removeTags(\$tags) {
 			'%PHPNAME%' => $table->getPhpName(),
 		));
 	}
+
+//    public function getObjectBuilderModifier()
+//	{
+//		if (is_null($this->objectBuilderModifier)) {
+//			$this->objectBuilderModifier = new I18nBehaviorObjectBuilderModifier($this);
+//		}
+//		return $this->objectBuilderModifier;
+//	}
+//
+//	public function getQueryBuilderModifier()
+//	{
+//		if (is_null($this->queryBuilderModifier)) {
+//			$this->queryBuilderModifier = new I18nBehaviorQueryBuilderModifier($this);
+//		}
+//		return $this->queryBuilderModifier;
+//	}
+//
+//	public function getPeerBuilderModifier()
+//	{
+//		if (is_null($this->peerBuilderModifier)) {
+//			$this->peerBuilderModifier = new I18nBehaviorPeerBuilderModifier($this);
+//		}
+//		return $this->peerBuilderModifier;
+//	}
 }
 
