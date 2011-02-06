@@ -32,18 +32,6 @@ class TaggableBehavior extends Behavior {
         $this->createTaggingTable();
     }
 
-    public function objectMethods($builder)
-    {
-        $this->builder = $builder;
-
-        $script = '';
-
-        $this->addAddTagsMethod($script);
-        $this->addRemoveTagMethod($script);
-
-        return $script;
-    }
-
     protected  function createTagTable()
     {
         $table = $this->getTable();
@@ -160,6 +148,21 @@ class TaggableBehavior extends Behavior {
         $this->taggingTable->addForeignKey($fkObj);
     }
 
+    /**
+     * Adds methods to the object
+     */
+    public function objectMethods($builder)
+    {
+        $this->builder = $builder;
+
+        $script = '';
+
+        $this->addAddTagsMethod($script);
+        $this->addRemoveTagMethod($script);
+
+        return $script;
+    }
+
     private function addAddTagsMethod(&$script)
     {
         $table = $this->getTable();
@@ -223,6 +226,37 @@ public function removeTags(\$tags) {
 
 ";
     }
+
+    /**
+     * Adds method to the query object
+     */
+    public function queryMethods($builder)
+	{
+		$this->builder = $builder;
+		$script = '';
+        
+        $this->addFilterByTagName($script);
+
+		return $script;
+	}
+
+    protected function addFilterByTagName(&$script)
+	{
+		$script .= "
+/**
+ * Filter the query on the tag name
+ *
+ * @param     string \$tagName A single tag name
+ *
+ * @return    " . $this->builder->getStubQueryBuilder()->getClassname() . " The current query, for fluid interface
+ */
+public function filterByTagName(\$tagName)
+{
+    return \$this->use".$this->taggingTable->getPhpName()."Query()->useTagQuery()->filterByName(\$tagName)->endUse()->endUse();
+}
+";
+	}
+
 
     protected function getTagTableName()
 	{

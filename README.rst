@@ -101,6 +101,16 @@ Some examples:
     $article->getTags() // PropelCollection of Tag object
 
 
+    // Query object
+    $articles = ArticleQuery::create()->filterByTagName('propel')->find();
+    // you could also use the propel generated method. filterByTagName is just a shortcut of
+    $articles = ArticleQuery::create()->useArticleTaggingQuery()->useTagQuery()->filterByName('propel')->endUse()->endUse();
+    // if you have a tag object (for example in a list of article tagged with...) propel has already done the dirty job
+    $tag = TagQuery::create()->findOneByName('symfony');
+    $articles = ArticleQuery::create()->filterByTag($tag)->find();
+    
+
+
 Tag widget!
 -----------
 
