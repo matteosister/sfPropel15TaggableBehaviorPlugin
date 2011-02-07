@@ -2,7 +2,7 @@
 sfPropel15TaggableBehaviorPlugin
 --------------------------------
 
-A behavior and a widget(work in progress) for symfony 1.x and propel 1.5/1.6
+A behavior and a widget for symfony 1.x and propel 1.5/1.6
 
 
 
