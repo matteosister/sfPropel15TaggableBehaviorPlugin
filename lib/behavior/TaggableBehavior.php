@@ -17,8 +17,8 @@ class TaggableBehavior extends Behavior {
     protected $taggingTable, 
         $tagTable,
         $objectBuilderModifier,
-		$queryBuilderModifier,
-		$peerBuilderModifier;
+        $queryBuilderModifier,
+        $peerBuilderModifier;
 
 
     public function modifyDatabase()
@@ -35,26 +35,26 @@ class TaggableBehavior extends Behavior {
     protected  function createTagTable()
     {
         $table = $this->getTable();
-		$database = $table->getDatabase();
-		$tagTableName = $this->getTagTableName();
+        $database = $table->getDatabase();
+        $tagTableName = $this->getTagTableName();
         $tagTablePhpName = $this->replaceTokens($this->parameters['tag_table_phpname']);
 
-		if($database->hasTable($tagTableName)) {
-			$this->tagTable = $database->getTable($tagTableName);
-		} else {
-			$this->tagTable = $database->addTable(array(
-				'name'      => $tagTableName,
-				'phpName'   => $tagTablePhpName,
-				'package'   => $table->getPackage(),
-				'schema'    => $table->getSchema(),
-				'namespace' => $table->getNamespace(),
-			));
+        if($database->hasTable($tagTableName)) {
+            $this->tagTable = $database->getTable($tagTableName);
+        } else {
+            $this->tagTable = $database->addTable(array(
+                'name'      => $tagTableName,
+                'phpName'   => $tagTablePhpName,
+                'package'   => $table->getPackage(),
+                'schema'    => $table->getSchema(),
+                'namespace' => $table->getNamespace(),
+            ));
             // every behavior adding a table should re-execute database behaviors
             // see bug 2188 http://www.propelorm.org/changeset/2188
             foreach ($database->getBehaviors() as $behavior) {
-                    $behavior->modifyDatabase();
+                $behavior->modifyDatabase();
             }
-		}
+        }
 
         if (!$this->tagTable->hasColumn('id')) {
             $this->tagTable->addColumn(array(
@@ -78,29 +78,29 @@ class TaggableBehavior extends Behavior {
     protected function createTaggingTable()
     {
         $table = $this->getTable();
-		$database = $table->getDatabase();
+        $database = $table->getDatabase();
         $pks = $this->getTable()->getPrimaryKey();
         if (count($pks) > 1) {
-			throw new EngineException('The Taggable behavior does not support tables with composite primary keys');
-		}
+            throw new EngineException('The Taggable behavior does not support tables with composite primary keys');
+        }
         $taggingTableName = $this->getTaggingTableName();
 
         if($database->hasTable($taggingTableName)) {
-			$this->taggingTable = $database->getTable($taggingTableName);
-		} else {
-			$this->taggingTable = $database->addTable(array(
-				'name'      => $taggingTableName,
-				'phpName'   => $this->replaceTokens($this->parameters['tagging_table_phpname']),
-				'package'   => $table->getPackage(),
-				'schema'    => $table->getSchema(),
-				'namespace' => $table->getNamespace(),
-			));
+            $this->taggingTable = $database->getTable($taggingTableName);
+        } else {
+            $this->taggingTable = $database->addTable(array(
+                'name'      => $taggingTableName,
+                'phpName'   => $this->replaceTokens($this->parameters['tagging_table_phpname']),
+                'package'   => $table->getPackage(),
+                'schema'    => $table->getSchema(),
+                'namespace' => $table->getNamespace(),
+            ));
             // every behavior adding a table should re-execute database behaviors
             // see bug 2188 http://www.propelorm.org/changeset/2188
             foreach ($database->getBehaviors() as $behavior) {
-                    $behavior->modifyDatabase();
+                $behavior->modifyDatabase();
             }
-		}
+        }
 
         $objFkColumn;
         if ($this->taggingTable->hasColumn($table->getName().'_id')) {
@@ -131,20 +131,20 @@ class TaggableBehavior extends Behavior {
         $fkTag->setForeignTableCommonName($this->tagTable->getName());
         $fkTag->setForeignSchemaName($this->tagTable->getSchema());
         $fkTag->setOnDelete(ForeignKey::CASCADE);
-		$fkTag->setOnUpdate(ForeignKey::NONE);
+        $fkTag->setOnUpdate(ForeignKey::NONE);
         foreach ($pks as $column) {
-			$fkTag->addReference($tagFkColumn, $column->getName());
-		}
+            $fkTag->addReference($tagFkColumn, $column->getName());
+        }
         $this->taggingTable->addForeignKey($fkTag);
 
         $fkObj = new ForeignKey();
         $fkObj->setForeignTableCommonName($this->getTable()->getName());
         $fkObj->setForeignSchemaName($this->getTable()->getSchema());
         $fkObj->setOnDelete(ForeignKey::CASCADE);
-		$fkObj->setOnUpdate(ForeignKey::NONE);
+        $fkObj->setOnUpdate(ForeignKey::NONE);
         foreach ($pks as $column) {
-			$fkObj->addReference($objFkColumn, $column->getName());
-		}
+            $fkObj->addReference($objFkColumn, $column->getName());
+        }
         $this->taggingTable->addForeignKey($fkObj);
     }
 
@@ -170,7 +170,7 @@ class TaggableBehavior extends Behavior {
         
 /**
  * Add tags
- * @param	array/string \$tags A string for a single tag or an array of strings for multiple tags
+ * @param   array|string    \$tags A string for a single tag or an array of strings for multiple tags
  */
 public function addTags(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
@@ -191,8 +191,7 @@ public function addTags(\$tags) {
         if (!\$this->getTags()->contains(\$theTag))
             \$this->addTag(\$theTag);
     }
-}
-        
+}      
 ";
     }
 
@@ -205,7 +204,7 @@ public function addTags(\$tags) {
         $script .= "
 /**
  * Remove a tag
- * @param	array/string \$tags A string for a single tag or an array of strings for multiple tags
+ * @param   array|string    \$tags A string for a single tag or an array of strings for multiple tags
  */
 public function removeTags(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
@@ -231,18 +230,18 @@ public function removeTags(\$tags) {
      * Adds method to the query object
      */
     public function queryMethods($builder)
-	{
-		$this->builder = $builder;
-		$script = '';
+    {
+        $this->builder = $builder;
+        $script = '';
         
         $this->addFilterByTagName($script);
 
-		return $script;
-	}
+        return $script;
+    }
 
     protected function addFilterByTagName(&$script)
-	{
-		$script .= "
+    {
+        $script .= "
 /**
  * Filter the query on the tag name
  *
@@ -255,50 +254,27 @@ public function filterByTagName(\$tagName)
     return \$this->use".$this->taggingTable->getPhpName()."Query()->useTagQuery()->filterByName(\$tagName)->endUse()->endUse();
 }
 ";
-	}
+    }
 
 
     protected function getTagTableName()
-	{
-		return $this->replaceTokens($this->getParameter('tag_table'));
-	}
+    {
+        return $this->replaceTokens($this->getParameter('tag_table'));
+    }
 
     protected function getTaggingTableName()
-	{
-		return $this->replaceTokens($this->getParameter('tagging_table'));
-	}
+    {
+        return $this->replaceTokens($this->getParameter('tagging_table'));
+    }
 
     public function replaceTokens($string)
-	{
-		$table = $this->getTable();
-		return strtr($string, array(
-			'%TABLE%'   => $table->getName(),
-			'%PHPNAME%' => $table->getPhpName(),
-		));
-	}
+    {
+        $table = $this->getTable();
+        return strtr($string, array(
+            '%TABLE%'   => $table->getName(),
+            '%PHPNAME%' => $table->getPhpName(),
+        ));
+    }
 
-//    public function getObjectBuilderModifier()
-//	{
-//		if (is_null($this->objectBuilderModifier)) {
-//			$this->objectBuilderModifier = new I18nBehaviorObjectBuilderModifier($this);
-//		}
-//		return $this->objectBuilderModifier;
-//	}
-//
-//	public function getQueryBuilderModifier()
-//	{
-//		if (is_null($this->queryBuilderModifier)) {
-//			$this->queryBuilderModifier = new I18nBehaviorQueryBuilderModifier($this);
-//		}
-//		return $this->queryBuilderModifier;
-//	}
-//
-//	public function getPeerBuilderModifier()
-//	{
-//		if (is_null($this->peerBuilderModifier)) {
-//			$this->peerBuilderModifier = new I18nBehaviorPeerBuilderModifier($this);
-//		}
-//		return $this->peerBuilderModifier;
-//	}
 }
 
