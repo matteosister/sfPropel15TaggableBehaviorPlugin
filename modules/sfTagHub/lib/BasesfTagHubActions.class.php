@@ -1,7 +1,7 @@
 <?php
 
-/*
- *  matteosister <matteog@gmail.com>
+/* 
+ *  Matteo Giachino <matteog@gmail.com>
  *  Just for fun...
  */
 
@@ -35,7 +35,7 @@ class BasesfTagHubActions extends sfActions
         $this->forward404Unless($request->hasParameter('tag_id'));
         $taggableName = $request->getParameter('taggable_phpname');
         $taggableQueryName = $taggableName.'Query';
-        $queryObj = $taggableQueryName::create();
+        $queryObj = call_user_func(array($taggableQueryName, 'create'));
         $obj = $queryObj->findOneById($request->getParameter('obj_id'));
         $tag = TagQuery::create()->findOneById($request->getParameter('tag_id'));
         $obj->removeTags($tag->getName());
