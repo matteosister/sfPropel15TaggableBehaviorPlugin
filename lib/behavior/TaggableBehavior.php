@@ -192,6 +192,19 @@ public function addTags(\$tags) {
             \$this->addTag(\$theTag);
     }
 }      
+
+/**
+ * Remove all tags
+ * @param      PropelPDO \$con optional connection object
+ */
+public function removeAllTags(PropelPDO \$con = null) {
+      // Get all tags for this object
+    \$taggings = \$this->get{$this->taggingTable->getPhpName()}s(\$con);
+    foreach (\$taggings as \$tag) {
+      \$tag->delete(\$con);
+    }
+}
+
 ";
     }
 
