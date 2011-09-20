@@ -186,10 +186,8 @@ public function addTags(\$tags) {
             \$theTag = new {$this->tagTable->getPhpName()}();
             \$theTag->setName(\$tag);
             \$theTag->save();
-        }
-
-        if (!\$this->getTags()->contains(\$theTag))
             \$this->addTag(\$theTag);
+        }
     }
 }
 
@@ -229,10 +227,10 @@ public function removeTags(\$tags) {
  * @param      PropelPDO \$con optional connection object
  */
 public function removeAllTags(PropelPDO \$con = null) {
-      // Get all tags for this object
+    // Get all tags for this object
     \$taggings = \$this->get{$this->taggingTable->getPhpName()}s(\$con);
-    foreach (\$taggings as \$tag) {
-      \$tag->delete(\$con);
+    foreach (\$taggings as \$tagging) {
+      \$tagging->delete(\$con);
     }
 }
 
