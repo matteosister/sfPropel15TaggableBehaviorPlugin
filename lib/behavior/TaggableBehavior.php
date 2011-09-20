@@ -174,7 +174,8 @@ class TaggableBehavior extends Behavior {
  */
 public function addTags(\$tags) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
-
+        // Remove duplicate tags. 
+    \$arrTags = array_intersect_key(\$arrTags, array_unique(array_map('strtolower', \$arrTags)));
     foreach (\$arrTags as \$tag) {
         \$tag = trim(\$tag);
         if (\$tag == \"\") return;
