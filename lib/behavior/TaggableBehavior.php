@@ -187,6 +187,8 @@ public function addTags(\$tags) {
             \$theTag->setName(\$tag);
             \$theTag->save();
             \$this->addTag(\$theTag);
+        } else {
+            \$this->addTag(\$theTag);
         }
     }
 }
