@@ -171,10 +171,12 @@ class TaggableBehavior extends Behavior {
 /**
  * Add tags
  * @param   array|string    \$tags A string for a single tag or an array of strings for multiple tags
+ * @param   PropelPDO       \$con optional connection object
  */
-public function addTags(\$tags) {
+public function addTags(\$tags, PropelPDO \$con = null) {
     \$arrTags = is_string(\$tags) ? explode(',', \$tags) : \$tags;
-
+        // Remove duplicate tags. 
+    \$arrTags = array_intersect_key(\$arrTags, array_unique(array_map('strtolower', \$arrTags)));
     foreach (\$arrTags as \$tag) {
         \$tag = trim(\$tag);
         if (\$tag == \"\") continue;
@@ -185,9 +187,18 @@ public function addTags(\$tags) {
             // create the tag
             \$theTag = new {$this->tagTable->getPhpName()}();
             \$theTag->setName(\$tag);
-            \$theTag->save();
-            \$this->addTag(\$theTag);
-        } else {
+            \$theTag->save(\$con);
+        }
+          // Add the tag **only** if not already associated 
+        \$found = false;
+        \$coll = \$this->getTags(null, \$con);
+        foreach (\$coll as \$t) {
+            if (\$t->getId() == \$theTag->getId()) {
+                \$found = true;
+                break;  
+            }
+        }
+        if (!\$found) {
             \$this->addTag(\$theTag);
         }
     }
